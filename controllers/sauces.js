@@ -8,10 +8,10 @@ exports.createSauce =  (req, res, next) => {
   
       ...sauceObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-      likes: 0,
-      dislikes: 0,
-      usersLiked: [],
-      usersDisiked: []
+      // likes: 0,
+      // dislikes: 0,
+      // usersLiked: [],
+      // usersDisiked: []
 
   
     });
@@ -65,3 +65,83 @@ exports.createSauce =  (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 
   };
+
+
+
+  exports.likes = (req, res, next) => {
+  
+
+    switch(req.body.like){
+       
+      case 0:
+          Sauce.findOne({_id: req.params.id})
+          .then((sauce) => {
+              if(sauce.usersLiked.find(user => user === req.body.userId)){
+                  Sauce.updateOne({_id: req.params.id}, {
+                    
+                      //Inc : permet de rajouter une valeur à une donnée numérique. Cette valeur peut-être positive ou négative.
+                      $inc: {likes: -1},
+                      //Pull : permet de supprimer un élément
+                      $pull : {usersLiked: req.body.userId}
+
+                  })
+
+                  .then(() => res.status(201).json({message: 'Yeah !'}))
+                  .catch(error => res.status(500).json({error}));
+              }
+              
+
+              
+              
+              //Voir si le bouton a été disliker ou non
+              if (sauce.usersDisliked.find(user => user === req.body.userId)){
+                  Sauce .updateOne({ _id: req.params.id},{
+
+                  $inc: {dislikes: -1},
+                  $pull: { usersDisliked: req.body.userId}
+              })
+              .then(() => res.status(201).json({message: 'ça passe pas !'}))
+              .catch(error => res.status(500).json({error}));
+          }  console.log(req.body)
+      })
+    
+      .catch(error => res.status(500).json({error}));
+      break;
+
+
+
+
+        //L'utilisateur cliquer sur le bouton "LIKE"
+
+
+      case 1:
+          Sauce.updateOne({_id: req.params.id}, {
+              $inc: { likes: 1},
+              $push: {usersLiked: req.body.userId}
+          })
+          .then(()=> res.status(201).json({message: 'Love Sauce !'}))
+          .catch(error => res.status(500).json({error}));
+          break;
+
+
+
+          //L'utilisateur cliquer sur le bouton "DISLIKE"
+
+      case -1:
+          Sauce.updateOne({ _id: req.params.id}, {
+              $inc: { dislikes: 1},
+              $push: { usersDisliked: req.body.userId}
+          })
+          .then(() => res.status(201).json({message: 'I hate this sauce !'}))
+          .catch(error => res.status(500).json({error}));
+          break;
+
+          default:
+              console.error('mauvaise requête !')
+  }
+};
+
+
+
+
+
