@@ -8,16 +8,13 @@ exports.createSauce =  (req, res, next) => {
   
       ...sauceObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-      // likes: 0,
-      // dislikes: 0,
-      // usersLiked: [],
-      // usersDisiked: []
+      
 
   
     });
 
     sauce.save()
-      .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+      .then(() => res.status(201).json({ message: 'Sauce enregistré !'}))
       .catch(error => res.status(400).json({ error }));
   };
 
@@ -30,9 +27,8 @@ exports.createSauce =  (req, res, next) => {
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
     Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
-      .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+      .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
       .catch(error => res.status(400).json({ error }));
-  
   };
 
 
@@ -42,7 +38,7 @@ exports.createSauce =  (req, res, next) => {
         const filename = sauce.imageUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => {
           Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
           .catch(error => res.status(400).json({ error }));
         });
       })
@@ -68,6 +64,7 @@ exports.createSauce =  (req, res, next) => {
 
 
 
+  
   exports.likes = (req, res, next) => {
   
 
@@ -77,12 +74,12 @@ exports.createSauce =  (req, res, next) => {
           Sauce.findOne({_id: req.params.id})
           .then((sauce) => {
               if(sauce.usersLiked.find(user => user === req.body.userId)){
-                  Sauce.updateOne({_id: req.params.id}, {
-                    
-                      //Inc : permet de rajouter une valeur à une donnée numérique. Cette valeur peut-être positive ou négative.
-                      $inc: {likes: -1},
-                      //Pull : permet de supprimer un élément
-                      $pull : {usersLiked: req.body.userId}
+                  Sauce.updateOne(
+                    {_id: req.params.id}, {
+                    //Inc : permet de rajouter une valeur à une donnée numérique. Cette valeur peut-être positive ou négative.
+                    $inc: {likes: -1},
+                    //Pull : permet de supprimer un élément
+                    $pull : {usersLiked: req.body.userId}
 
                   })
 
@@ -95,8 +92,8 @@ exports.createSauce =  (req, res, next) => {
               
               //Voir si le bouton a été disliker ou non
               if (sauce.usersDisliked.find(user => user === req.body.userId)){
-                  Sauce .updateOne({ _id: req.params.id},{
-
+                  Sauce.updateOne(
+                  { _id: req.params.id},{
                   $inc: {dislikes: -1},
                   $pull: { usersDisliked: req.body.userId}
               })
@@ -115,7 +112,8 @@ exports.createSauce =  (req, res, next) => {
 
 
       case 1:
-          Sauce.updateOne({_id: req.params.id}, {
+          Sauce.updateOne(
+              {_id: req.params.id}, {
               $inc: { likes: 1},
               $push: {usersLiked: req.body.userId}
           })
@@ -128,7 +126,8 @@ exports.createSauce =  (req, res, next) => {
           //L'utilisateur cliquer sur le bouton "DISLIKE"
 
       case -1:
-          Sauce.updateOne({ _id: req.params.id}, {
+          Sauce.updateOne(
+              { _id: req.params.id}, {
               $inc: { dislikes: 1},
               $push: { usersDisliked: req.body.userId}
           })
