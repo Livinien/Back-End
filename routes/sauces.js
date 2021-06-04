@@ -15,8 +15,6 @@ router.post('/:id/like', auth, saucesCtrl.likes);
 
 
 
-
-
 module.exports = router;
 
     

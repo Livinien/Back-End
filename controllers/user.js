@@ -44,18 +44,11 @@ exports.login = (req, res, next) => {
         maskAtTheRate: false
     };
 
-    const checkMail = MaskData.maskEmail2(req.body.email,emailMask2Options);
-    
-    
-    
-
-
+    const checkMail = MaskData.maskEmail2(req.body.email, emailMask2Options);
 
     User.findOne({ email: checkMail })
       .then(user => {
 
-        
-        
         if (!user) {
 
             return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -76,7 +69,7 @@ exports.login = (req, res, next) => {
                     userId: user._id,
                     token: jwt.sign(
                      { userId: user._id },
-                     'RANDOM_TOKEN_SECRET',
+                     process.env.HIDDEN_TOKEN,
                      { expiresIn: '24h'}
                     )
 
