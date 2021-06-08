@@ -1,5 +1,10 @@
+
 const Sauce = require('../models/sauces');
 const fs = require('fs');
+
+
+
+// CREER UNE SAUCE //
 
 exports.createSauce =  (req, res, next) => { 
   
@@ -13,12 +18,14 @@ exports.createSauce =  (req, res, next) => {
     });
 
 
-
     sauce.save()
       .then(() => res.status(201).json({ message: 'Sauce enregistré !'}))
       .catch(error => res.status(400).json({ error }));
   };
   
+
+
+  // MODIFIER LA SAUCE //
 
 
   exports.modifySauce = (req, res, next) => {
@@ -32,6 +39,10 @@ exports.createSauce =  (req, res, next) => {
       .catch(error => res.status(400).json({ error }));
   };
 
+
+
+
+  // SUPPRIMER LA SAUCE //
 
   exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
@@ -47,6 +58,10 @@ exports.createSauce =  (req, res, next) => {
   };
 
 
+
+
+  // RECUPERER UNE SAUCE //
+
   exports.getOneSauce = (req, res, next) => {
   
     Sauce.findOne({_id: req.params.id})
@@ -55,6 +70,9 @@ exports.createSauce =  (req, res, next) => {
   
   };
 
+
+
+  // RECUPERER TOUTES LES SAUCES //
 
   exports.getAllSauces = (req, res, next) => {
     Sauce.find({})
@@ -65,15 +83,16 @@ exports.createSauce =  (req, res, next) => {
 
 
 
+  // AJOUTER LIKE / DISLIKE //
   
   exports.likes = (req, res, next) => {
   
-
     switch(req.body.like){
        
       case 0:
           Sauce.findOne({_id: req.params.id})
           .then((sauce) => {
+            // Permet de reconnaitre si l'utilisateur à déjà mis un like //
               if(sauce.usersLiked.find(user => user === req.body.userId)){
                   Sauce.updateOne(
                     {_id: req.params.id}, {
@@ -92,6 +111,8 @@ exports.createSauce =  (req, res, next) => {
               
               
               //Voir si le bouton a été disliker ou non
+
+              // Permet de reconnaitre si l'utilisateur à déjà mis un dislike //
               if (sauce.usersDisliked.find(user => user === req.body.userId)){
                   Sauce.updateOne(
                   { _id: req.params.id},{
@@ -108,9 +129,7 @@ exports.createSauce =  (req, res, next) => {
 
 
 
-
-        //L'utilisateur cliquer sur le bouton "LIKE"
-
+        //L'utilisateur clique sur le bouton "LIKE"
 
       case 1:
           Sauce.updateOne(
@@ -136,8 +155,7 @@ exports.createSauce =  (req, res, next) => {
           .catch(error => res.status(500).json({error}));
           break;
 
-          default:
-              console.error('mauvaise requête !')
+      
   }
 };
 

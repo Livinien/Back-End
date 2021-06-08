@@ -1,3 +1,8 @@
+
+// PERMET DE DEFINIR LES ROUTES //
+
+// LES ROUTES PERMETTANTS POUR RENDRE LE SITE DYNAMIQUE //
+
 const express = require('express');
 const router = express.Router();
 
@@ -11,7 +16,6 @@ router.delete('/:id', auth, saucesCtrl.deleteSauce);
 router.get('/:id', auth, saucesCtrl.getOneSauce);
 router.get('/', auth, saucesCtrl.getAllSauces);
 router.post('/:id/like', auth, saucesCtrl.likes);
-
 
 
 

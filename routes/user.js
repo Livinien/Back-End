@@ -1,3 +1,6 @@
+
+// CE QUI PERMET DE FAIRE DES REQUETES AU SERVEUR MANGODB //
+
 const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/user');

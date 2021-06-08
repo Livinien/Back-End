@@ -1,6 +1,8 @@
 
 // AUTHORISATION POUR SE LOGER //
 
+// CREATION DE TOKEN POUR AJOUTER UNE SECURITE AU SITE //
+
 const jwt = require('jsonwebtoken');
 
 

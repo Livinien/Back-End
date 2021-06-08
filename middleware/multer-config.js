@@ -1,5 +1,5 @@
 
-// STOCKAGE D'IMAGE //
+// STOCKAGE D'IMAGE DES SAUCES PIQUANTES //
 
 const multer = require('multer');
 

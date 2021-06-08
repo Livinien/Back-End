@@ -1,3 +1,8 @@
+
+// SCHEMA DES SAUCES //
+
+// CARACTERISTIQUES DES INFORMATIONS SUR LES SAUCES //
+
 const mongoose = require('mongoose');
 
 const saucesSchema = mongoose.Schema({

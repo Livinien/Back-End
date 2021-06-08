@@ -1,3 +1,8 @@
+
+// SCHEMA UTILISATEUR //
+
+// DEFINIR DES CLEFS ET DES VALEURS POUR L'UTILISATEUR POUR S'INSCRIRE ET SE LOGER //
+
 const mongoose = require('mongoose');
 
 const uniqueValidator = require('mongoose-unique-validator');

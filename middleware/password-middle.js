@@ -1,6 +1,8 @@
 
 // VALIDATION DU MOT DE PASSE //
 
+// SECURISER POUR LE MOT DE PASSE //
+
 const passwordSchema = require('../models/password');
 
 

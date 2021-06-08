@@ -3,24 +3,21 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
-const MaskData = require('maskdata');
+const CryptoJS = require("crypto-js");
 
+
+
+// ENREGISTREMENT D'UN UTILISATEUR //
 
 exports.signup = (req, res, next) => {
 
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
-        const emailMask2Options = {
-            maskWith: "*", 
-            unmaskedStartCharactersBeforeAt: 0,
-            unmaskedEndCharactersAfterAt: 0,
-            maskAtTheRate: false
-        };
-
-        const checkMail= MaskData.maskEmail2(req.body.email,emailMask2Options);
+        // Encodage de l'adresse mail pour le signup //
+        const emailCryptoJs = CryptoJS.HmacSHA512(req.body.email, `${process.env.CRYPTO_TOKEN}`).toString();
         
         const user = new User({
-            email: checkMail, 
+            email: emailCryptoJs, 
             password: hash
 
         });
@@ -35,18 +32,17 @@ exports.signup = (req, res, next) => {
 
 
 
+// SE CONNECTER POUR LES UTILISATEURS DEJA INSCRITS //
+
 exports.login = (req, res, next) => {
 
-    const emailMask2Options = {
-        maskWith: "*", 
-        unmaskedStartCharactersBeforeAt: 0,
-        unmaskedEndCharactersAfterAt: 0,
-        maskAtTheRate: false
-    };
+    // Encodage de l'adresse mail pour le login //
+    const emailCryptoJs = CryptoJS.HmacSHA512(req.body.email, `${process.env.CRYPTO_TOKEN}`).toString();
 
-    const checkMail = MaskData.maskEmail2(req.body.email, emailMask2Options);
+    
+    // POUR TROUVER L'UTILISATEUR //
 
-    User.findOne({ email: checkMail })
+    User.findOne({ email: emailCryptoJs })
       .then(user => {
 
         if (!user) {
@@ -55,10 +51,11 @@ exports.login = (req, res, next) => {
 
         }
 
+        // BCRYPT COMPARE LE MOT DE PASSE SUR MANGODB POUR COMPARER CELUI QUE ENTRE L'UTILISATEUR //
+
         bcrypt.compare(req.body.password, user.password)
            .then(valid => {
 
-            
 
                 if(!valid) {
 
