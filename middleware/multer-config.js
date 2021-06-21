@@ -1,4 +1,7 @@
 
+
+// Permet de gérer les fichiers externes intégrer dans l'application //
+
 // STOCKAGE D'IMAGE DES SAUCES PIQUANTES //
 
 const multer = require('multer');

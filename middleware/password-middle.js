@@ -12,7 +12,7 @@ module.exports = (req,res, next) => {
             'content-type' : 'application/json'
         });
         res.end('Erreur dans votre mail ou votre mot de passe');
-    }else{
-     next();
+    } else{
+      next();
      }
 };
